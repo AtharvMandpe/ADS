@@ -12,16 +12,33 @@ struct node *queue[100];
 int rear = -1;
 int f = -1;
 
+struct node* stack[100];
+int stop = -1;
+
+// stack functions declaration
+void stackpush();
+struct node* stackpop();
+struct node* stacktop();
+
 // queue functions declaration
 void push();
 void pop();
 struct node *front();
 
 // bst functions declaration
+
+//1. TRAVERSALS
 void inorder();
+void preorder();
+void postorder();
+void inorderIterative();
+void preorderIterative();
+void postorderIterative();
+void levelWise();
+
+//2. OPERATIONS
 struct node *insert();
 struct node *deleteNode();
-void levelWise();
 int height();
 void leafNodes();
 struct node *mirrorImage();
@@ -93,6 +110,7 @@ void push(struct node *root)
     }
 }
 
+// queue operations
 void pop()
 {
     f++;
@@ -102,6 +120,22 @@ struct node *front()
 {
     return queue[f];
 }
+
+
+// stack operations
+void stackpush(struct node* temp){
+    stack[++stop] = temp;
+}
+
+struct node* stackpop(){
+    return stack[stop--];
+}
+
+struct node* stacktop(){
+    return stack[stop];
+}
+
+
 
 // deleting node
 struct node *deleteNode(struct node *root, int data)
@@ -154,6 +188,8 @@ struct node *deleteNode(struct node *root, int data)
     return root;
 }
 
+
+
 // inserting node
 struct node *insert(struct node *root, int d)
 {
@@ -176,6 +212,154 @@ struct node *insert(struct node *root, int d)
     }
 
     return root;
+}
+
+
+
+// height of bst
+int height(struct node *root)
+{
+    if (root == NULL)
+    {
+        return 0;
+    }
+    if (root->left == NULL && root->right == NULL)
+    {
+        return 1;
+    }
+    int left = 1 + height(root->left);
+    int right = 1 + height(root->right);
+
+    if (left >= right)
+    {
+        return left;
+    }
+    return right;
+}
+
+
+
+// display leaf nodes
+void leafNodes(struct node *root)
+{
+    if (root == NULL)
+    {
+        return;
+    }
+    if (root->left == NULL && root->right == NULL)
+    {
+        printf("%d ", root->data);
+        return;
+    }
+    leafNodes(root->left);
+    leafNodes(root->right);
+}
+
+
+
+// mirror image of bst
+struct node *mirrorImage(struct node *root)
+{
+    if (root == NULL)
+    {
+        return NULL;
+    }
+
+    struct node *temp = root->left;
+    root->left = mirrorImage(root->right);
+    root->right = mirrorImage(temp);
+
+    return root;
+}
+
+
+
+//TRAVERSALS
+void inorder(struct node* root){
+    if(root == NULL){
+        return;
+    }
+
+    inorder(root->left);
+    printf("%d ", root->data);
+    inorder(root->right);
+}
+
+void preorder(struct node* root){
+    if(root == NULL){
+        return;
+    }
+
+    printf("%d ", root->data);
+    preorder(root->left);
+    preorder(root->right);
+}
+
+void postorder(struct node* root){
+    if(root == NULL){
+        return;
+    }
+
+    postorder(root->left);
+    postorder(root->right);
+    printf("%d ", root->data);
+}
+
+void inorderIterative(struct node* root){
+    while(root != NULL){
+        stackpush(root);
+        root = root->left;
+    }
+
+    struct node* temp = (struct node*)malloc(sizeof(struct node));
+    temp = stackpop();
+    printf("%d ", temp->data);
+
+    while(stop != -1){
+        temp = stackpop();
+        printf("%d ", temp->data);
+
+        if(temp->right != NULL){
+            temp = temp->right;
+            stackpush(temp);
+            temp = temp->left;
+            while(temp != NULL){
+                stackpush(temp);
+                temp = temp->left;
+            }
+        }
+    }
+}
+
+void preorderIterative(struct node* root){
+    while(root != NULL){
+        stackpush(root);
+        printf("%d ", root->data);
+        root = root->left;
+    }
+
+    struct node* temp = (struct node*)malloc(sizeof(struct node));
+    temp = stackpop();
+
+    while(stop != -1){
+        temp = stackpop();
+
+        if(temp->right != NULL){
+            temp = temp->right;
+            stackpush(temp);
+            printf("%d ", temp->data);
+            temp = temp->left;
+            while(temp != NULL){
+                stackpush(temp);
+                printf("%d ", temp->data);
+                temp = temp->left;
+            }
+        }
+    }
+}
+
+void postorderIterative(struct node* root){
+    
 }
 
 // level order traversal ( BFS )
@@ -220,56 +404,4 @@ void levelWise(struct node *root)
             next = 0;
         }
     }
-}
-
-// height of bst
-int height(struct node *root)
-{
-    if (root == NULL)
-    {
-        return 0;
-    }
-    if (root->left == NULL && root->right == NULL)
-    {
-        return 1;
-    }
-    int left = 1 + height(root->left);
-    int right = 1 + height(root->right);
-
-    if (left >= right)
-    {
-        return left;
-    }
-    return right;
-}
-
-// display leaf nodes
-void leafNodes(struct node *root)
-{
-    if (root == NULL)
-    {
-        return;
-    }
-    if (root->left == NULL && root->right == NULL)
-    {
-        printf("%d ", root->data);
-        return;
-    }
-    leafNodes(root->left);
-    leafNodes(root->right);
-}
-
-// mirror image of bst
-struct node *mirrorImage(struct node *root)
-{
-    if (root == NULL)
-    {
-        return NULL;
-    }
-
-    struct node *temp = root->left;
-    root->left = mirrorImage(root->right);
-    root->right = mirrorImage(temp);
-
-    return root;
 }
