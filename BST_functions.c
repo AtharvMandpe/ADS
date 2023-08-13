@@ -359,7 +359,26 @@ void preorderIterative(struct node* root){
 }
 
 void postorderIterative(struct node* root){
-    
+    struct node* prev = NULL;
+    do{
+        while(root != NULL){
+            stackpush(root);
+            root = root->left;
+        }
+
+        while(root == NULL && stop != -1){
+            root = stacktop();
+            if(root->right == NULL || root->right == prev){
+                printf("%d ", root->data);
+                prev = root;
+                root = stackpop();
+                root = NULL;
+            }
+            else{
+                root = root->right;
+            }
+        }
+    }while(stop != -1);
 }
 
 // level order traversal ( BFS )
