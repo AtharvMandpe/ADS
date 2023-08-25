@@ -35,6 +35,19 @@ int mini();
 int main()
 {
 
+    //matrix for dfs using adjacency matrix
+    int m[][5] = {
+        {0, 1, 1, 1, 1},
+        {1, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0},
+        {1, 0, 0, 0, 0}};
+
+    int l = 5;
+
+    DFSadjmat(l, m);
+
+
     // creating adj list
     struct node *g[10];
 
@@ -103,12 +116,6 @@ int main()
         {0, 0, 0, 0, 1, 1, 0, 1},
         {0, 0, 0, 0, 0, 1, 1, 0}};
 
-    int m[][5] = {
-        {0, 1, 1, 1, 1},
-        {1, 0, 0, 0, 0},
-        {1, 0, 0, 0, 0},
-        {1, 0, 0, 0, 0},
-        {1, 0, 0, 0, 0}};
 
     int prim[][5] = {
         {99, 2, 3, 6, 2},
@@ -117,11 +124,9 @@ int main()
         {6, 99, 4, 99, 1},
         {2, 2, 3, 1, 99}};
     int p = 5;
-    int l = 5;
     int n = 8;
 
     // BFSadjmat(n, g);
-    // DFSadjmat(l, m);
     DFSadjlist(g, v);
     // prims(p, prim);
 
